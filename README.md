@@ -45,11 +45,11 @@ reported in the Results chapter, plus the figures and tables it supports.
 ## Statistical methods and where each is used
 | Test | Library function | Hypotheses |
 |------|------------------|------------|
-| Pearson correlation (r, p) | `scipy.stats.pearsonr` | H1, H2, H3, H4, H9, H10 |
+| Pearson correlation (r, p) | `scipy.stats.pearsonr` | H1, H2, H3, H4, E9, E10 |
 | One-sample t-test | `scipy.stats.ttest_1samp` | H5 (vs neutral 3) |
-| Welch's independent t-test | `scipy.stats.ttest_ind(equal_var=False)` | H6, H7, H8 |
-| Mann-Whitney U (rank check) | `scipy.stats.mannwhitneyu` | H6, H7, H8 |
-| OLS regression (betas, R2) | `statsmodels.api.OLS` | H9/H10 combined model |
+| Welch's independent t-test | `scipy.stats.ttest_ind(equal_var=False)` | E6, E7, E8 |
+| Mann-Whitney U (rank check) | `scipy.stats.mannwhitneyu` | E6, E7, E8 |
+| OLS regression (betas, R2) | `statsmodels.api.OLS` | E9/E10 combined model |
 | Cronbach's alpha | hand-coded (variance formula) | scale reliability |
 
 Only Cronbach's alpha is hand-coded (standard variance-based formula); it matches
@@ -64,11 +64,11 @@ validated library functions.
 | H3 | trust -> AI influence | Pearson | supported (r=.54, p<.001) |
 | H4 | risk -> trust | Pearson | not supported (r=.01, p=.93) |
 | H5 | human judgment > neutral | one-sample t | supported (t=8.1, p<.001) |
-| H6 | institutional > angel adoption | t + MWU | supported (p=.002) |
-| H7 | experienced > new adoption | t + MWU | supported (p=.021) |
-| H8 | early-only < later-stage adoption | t + MWU | supported (p=.003) |
-| H9 | risk -> AI influence (neg) | Pearson | supported (r=-.28, p=.040) |
-| H10 | intuition -> AI influence (neg) | Pearson / OLS | supported bivariate only |
+| E6 | institutional > angel adoption | t + MWU | supported (p=.002) |
+| E7 | experienced > new adoption | t + MWU | supported (p=.021) |
+| E8 | early-only < later-stage adoption | t + MWU | supported (p=.003) |
+| E9 | risk -> AI influence (neg) | Pearson | supported (r=-.28, p=.040) |
+| E10 | intuition -> AI influence (neg) | Pearson / OLS | supported bivariate only |
 
 ## Notes / caveats
 - Correlations use pairwise complete cases, so n varies slightly per test (55-60).
