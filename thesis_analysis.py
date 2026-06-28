@@ -6,10 +6,10 @@ One script that reproduces every number in the Results chapter:
   - data cleaning & analytic sample
   - scale construction + Cronbach's alpha (reliability)
   - descriptive statistics
-  - H1-H4, H9, H10  -> Pearson correlations
+  - H1-H4, E9, E10  -> Pearson correlations
   - H5              -> one-sample t-test (item level)
-  - H6-H8           -> independent t-test + Mann-Whitney U
-  - H9/H10 combined -> multiple linear regression (OLS)
+  - E6-E8           -> independent t-test + Mann-Whitney U
+  - E9/E10 combined -> multiple linear regression (OLS)
 
 Libraries used:
   pandas      -> data handling, row means, variances
