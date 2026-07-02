@@ -6,10 +6,10 @@ One script that reproduces every number in the Results chapter:
   - data cleaning & analytic sample
   - scale construction + Cronbach's alpha (reliability)
   - descriptive statistics
-  - H1-H4, E9, E10  -> Pearson correlations
+  - H1-H4, H9, H10  -> Pearson correlations
   - H5              -> one-sample t-test (item level)
-  - E6-E8           -> independent t-test + Mann-Whitney U
-  - E9/E10 combined -> multiple linear regression (OLS)
+  - H6-H8           -> independent t-test + Mann-Whitney U
+  - H9/H10 combined -> multiple linear regression (OLS)
 
 Libraries used:
   pandas      -> data handling, row means, variances
@@ -193,5 +193,47 @@ for name in ["trust", "risk", "intuition"]:
     print(f"    {name:10s} beta={model.params[name]:+.2f}  p={model.pvalues[name]:.3f}")
 # Interpretation: trust & risk stay significant; intuition does not ->
 # H10 holds bivariately but not in the combined model.
+
+
+# ----------------------------------------------------------------------
+# 8. ROBUSTNESS CHECK — one "all-in-one" regression
+#    AI influence regressed on every predictor at once: the three model
+#    variables (trust, risk, intuition) plus adoption and the three group
+#    indicators (investor type, experience, stage focus). This is NOT the
+#    main analysis; it only tests the final link and is reported as a
+#    robustness check against the piecewise results.
+# ----------------------------------------------------------------------
+print("\n--- ROBUSTNESS: influence ~ all predictors (standardised continuous) ---")
+
+# build the group indicators as 0/1 columns
+A["institutional"] = A["Q1"].isin(
+    ["Venture Capital", "Corporate Venture Capital Investor", "Investment Analyst / Associate"]
+).astype(int)
+A["experienced"] = (A["Q3"].notna() & ~A["Q3"].astype(str).str.strip().eq("0\u20135")).astype(int)
+A["laterstage"] = A["Q2"].fillna("").str.contains("Series A|Series B", case=False).astype(int)
+
+cont = ["adopt", "usefulness", "trust", "risk", "intuition"]          # standardise these
+groups = ["institutional", "experienced", "laterstage"]              # already 0/1
+
+dfull = A[["influence"] + cont + groups].dropna()
+zf = dfull.copy()
+for c in cont:
+    zf[c] = (dfull[c] - dfull[c].mean()) / dfull[c].std()
+# influence is standardised too so betas are comparable
+zf["influence"] = (dfull["influence"] - dfull["influence"].mean()) / dfull["influence"].std()
+
+Xf = sm.add_constant(zf[cont + groups])
+mfull = sm.OLS(zf["influence"], Xf).fit()
+print(f"  n={int(mfull.nobs)}  predictors={int(mfull.df_model)}  "
+      f"obs-per-predictor={mfull.nobs/mfull.df_model:.1f}")
+print(f"  R2={mfull.rsquared:.2f}  adjusted R2={mfull.rsquared_adj:.2f}")
+for name in cont + groups:
+    print(f"    {name:14s} beta={mfull.params[name]:+.2f}  p={mfull.pvalues[name]:.3f}")
+# Reading: trust dominates and risk holds (matches H3/H9); intuition is
+# borderline; adoption and all three group variables are NOT significant
+# (supports the H6-H8 "adoption differs, influence does not" finding).
+# Adjusted R2 matches the focused 3-predictor model, so the extra
+# predictors add no explanatory power -> piecewise remains the better
+# main analysis.
 
 print("\nDONE.")
