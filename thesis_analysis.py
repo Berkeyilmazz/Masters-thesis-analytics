@@ -32,7 +32,7 @@ import statsmodels.api as sm
 # ----------------------------------------------------------------------
 # Qualtrics exports two metadata rows under the header (question text +
 # import IDs). skiprows=[1,2] drops them so row 0 stays as column names.
-SRC = "Thesis_June_27__2026_14_05.csv"     # <-- change path if needed
+SRC = "Thesis_June_27__2026_14_05.csv"     
 df = pd.read_csv(SRC, skiprows=[1, 2])
 
 # Remove survey-preview (test) responses, keep only real ones.
